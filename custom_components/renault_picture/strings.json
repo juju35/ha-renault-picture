@@ -1,0 +1,15 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Expose the official MyRenault vehicle picture as a sensor. No credentials needed: it reuses the data already loaded by the Renault integration."
+      }
+    },
+    "abort": {
+      "already_configured": "Renault Picture is already set up.",
+      "single_instance_allowed": "Only a single instance is allowed.",
+      "renault_not_loaded": "The Renault integration is not set up. Add it first, then add Renault Picture."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Expose la photo officielle MyRenault du véhicule sous forme de capteur. Aucun identifiant requis : les données déjà chargées par l'intégration Renault sont réutilisées."
+      }
+    },
+    "abort": {
+      "already_configured": "Renault Picture est déjà configuré.",
+      "single_instance_allowed": "Une seule instance est autorisée.",
+      "renault_not_loaded": "L'intégration Renault n'est pas configurée. Ajoutez-la d'abord, puis ajoutez Renault Picture."
+    }
+  }
+}

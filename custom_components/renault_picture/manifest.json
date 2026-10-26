@@ -1,0 +1,14 @@
+{
+  "domain": "renault_picture",
+  "name": "Renault Picture",
+  "after_dependencies": ["renault"],
+  "codeowners": ["@juju35"],
+  "config_flow": true,
+  "documentation": "https://github.com/juju35/ha-renault-picture",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/juju35/ha-renault-picture/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}
