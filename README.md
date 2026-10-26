@@ -13,7 +13,7 @@ The picture URL already lives in the data the `renault` integration loads from
 Kamereon (each vehicle's `PICTURE` asset). This integration only reads it and
 publishes it, so it needs **no credentials** and makes **no network calls** of its own.
 
-[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=renault_picture)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-renault-picture&category=integration)
 
 ## Features
 
@@ -29,9 +29,17 @@ publishes it, so it needs **no credentials** and makes **no network calls** of i
 
 ## Installation
 
-### Via HACS (custom repository)
+### Via HACS (recommended)
 
-1. HACS → **⋮** (top right) → **Custom repositories**
+Click the button below to add the repository directly:
+
+[![Add to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-renault-picture&category=integration)
+
+Then click **Download** and restart Home Assistant.
+
+Or manually:
+
+1. Open HACS → **⋮** (top right) → **Custom repositories**
 2. Add `https://github.com/juju35/ha-renault-picture` — Type: **Integration**
 3. Search for **Renault Picture** and click **Download**
 4. Restart Home Assistant
