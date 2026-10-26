@@ -13,6 +13,8 @@ from types import SimpleNamespace
 import pytest
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.renault_picture.const import RENAULT_DOMAIN
 
@@ -42,10 +44,25 @@ def add_renault(
     assets: list[dict],
     vin: str = VIN,
 ) -> SimpleNamespace:
-    """Make a loaded 'renault' entry (with one vehicle) visible to the integration."""
+    """Make a loaded 'renault' entry (with one vehicle and its device) visible to the integration.
+
+    The real entry is registered but never set up (so teardown has nothing of the
+    'renault' integration to unload); a stand-in reports it as loaded.
+    """
     vehicle = SimpleNamespace(details=SimpleNamespace(assets=assets))
     hub = SimpleNamespace(vehicles={vin: vehicle})
-    fake_entry = SimpleNamespace(domain=RENAULT_DOMAIN, state=ConfigEntryState.LOADED, runtime_data=hub)
+    real_entry = MockConfigEntry(domain=RENAULT_DOMAIN)
+    real_entry.add_to_hass(hass)
+    dr.async_get(hass).async_get_or_create(
+        config_entry_id=real_entry.entry_id,
+        identifiers={(RENAULT_DOMAIN, vin)},
+        manufacturer="Renault",
+        model="Espace vi",
+        name="Espace",
+    )
+    fake_entry = SimpleNamespace(
+        domain=RENAULT_DOMAIN, entry_id=real_entry.entry_id, state=ConfigEntryState.LOADED, runtime_data=hub
+    )
 
     original = hass.config_entries.async_entries
 

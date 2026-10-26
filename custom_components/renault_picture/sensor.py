@@ -9,7 +9,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import RENAULT_DOMAIN
@@ -23,16 +23,26 @@ _SIZE_LARGE = "LARGE"
 _SIZE_SMALL = "SMALL"
 
 
-def _renault_hubs(hass: HomeAssistant) -> list[Any]:
-    """Return the runtime hubs of every loaded core 'renault' config entry."""
-    hubs: list[Any] = []
+def _renault_hubs(hass: HomeAssistant) -> list[tuple[ConfigEntry, Any]]:
+    """Return (entry, hub) for every loaded core 'renault' config entry."""
+    hubs: list[tuple[ConfigEntry, Any]] = []
     for entry in hass.config_entries.async_entries(RENAULT_DOMAIN):
         if entry.state is not ConfigEntryState.LOADED:
             continue
         hub = getattr(entry, "runtime_data", None)
         if hub is not None and getattr(hub, "vehicles", None):
-            hubs.append(hub)
+            hubs.append((entry, hub))
     return hubs
+
+
+def _vehicle_devices(dev_reg: dr.DeviceRegistry, renault_entry: ConfigEntry) -> dict[str, dr.DeviceEntry]:
+    """Map VIN -> the device the 'renault' integration created for that vehicle."""
+    devices: dict[str, dr.DeviceEntry] = {}
+    for device in dr.async_entries_for_config_entry(dev_reg, renault_entry.entry_id):
+        for domain, identifier in device.identifiers:
+            if domain == RENAULT_DOMAIN:
+                devices[identifier] = device
+    return devices
 
 
 def _assets(proxy: Any) -> list[dict[str, Any]]:
@@ -73,13 +83,22 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up one picture sensor per Renault vehicle."""
+    """Set up one picture sensor per Renault vehicle, on that vehicle's device."""
+    dev_reg = dr.async_get(hass)
+    # This integration owns no device: its sensors join the Renault ones. Drop the
+    # devices 0.1.0 created by mistake (HA removes a device left with no entry).
+    for device in dr.async_entries_for_config_entry(dev_reg, entry.entry_id):
+        dev_reg.async_update_device(device.id, remove_config_entry_id=entry.entry_id)
+
     hubs = _renault_hubs(hass)
     if not hubs:
         _LOGGER.warning("No loaded 'renault' integration found; no picture sensor created")
         return
 
-    entities = [RenaultPictureSensor(vin, proxy) for hub in hubs for vin, proxy in hub.vehicles.items()]
+    entities: list[RenaultPictureSensor] = []
+    for renault_entry, hub in hubs:
+        devices = _vehicle_devices(dev_reg, renault_entry)
+        entities.extend(RenaultPictureSensor(vin, proxy, devices.get(vin)) for vin, proxy in hub.vehicles.items())
     async_add_entities(entities)
 
 
@@ -91,12 +110,17 @@ class RenaultPictureSensor(SensorEntity):
     _attr_icon = "mdi:car-side"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
-    def __init__(self, vin: str, proxy: Any) -> None:
-        """Initialise the sensor and bind it to the existing Renault device."""
+    def __init__(self, vin: str, proxy: Any, device: dr.DeviceEntry | None) -> None:
+        """Initialise the sensor and attach it to the vehicle's Renault device."""
         self._vin = vin
         self._proxy = proxy
         self._attr_unique_id = f"{vin}_picture"
-        self._attr_device_info = DeviceInfo(identifiers={(RENAULT_DOMAIN, vin)})
+        if device is not None:
+            # Same pattern as core helpers (switch_as_x, template): link to a device
+            # owned by another integration, so the sensor is "<vehicle> Picture".
+            self.device_entry = device
+        else:
+            self._attr_name = f"{vin} Picture"
 
     @property
     def native_value(self) -> str:

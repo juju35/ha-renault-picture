@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+### Fixes
+- The picture sensor now joins the vehicle's Renault device and is named after it ("Espace Picture"), instead of creating a separate "Renault Picture" device per vehicle. Home Assistant no longer treats device identifiers as unique across integrations, so the sensor is now linked to the Renault device directly.
+- The "Renault Picture" devices created by 0.1.0 are removed at startup.
+- README: the top button adds the repository to HACS (it started the config flow, which fails before the download).
+
 ## 0.1.0
 
 ### Features
