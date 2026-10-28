@@ -57,9 +57,11 @@ jobs:
         with:
           python-version: "3.13"
 
-      # 0.13.190 pins homeassistant==2024.12.0, the minimum in hacs.json.
+      # 0.13.269 pins homeassistant==2025.8.0, the minimum in hacs.json
+      # (entity_platform only honors a pre-set device_entry since 2025.8).
+      # pycares<5: aiodns 3.5.0 (pinned by HA 2025.8) breaks on pycares 5.
       - name: Install dependencies
-        run: pip install "pytest-homeassistant-custom-component==0.13.190"
+        run: pip install "pytest-homeassistant-custom-component==0.13.269" "pycares<5"
 
       - name: Run tests
         run: pytest

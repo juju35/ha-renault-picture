@@ -136,6 +136,8 @@ class RenaultPictureSensor(SensorEntity):
         if device is not None:
             # Same pattern as core helpers (switch_as_x, template): link to a device
             # owned by another integration, so the sensor is "<vehicle> Picture".
+            # entity_platform only honors a pre-set device_entry since HA 2025.8,
+            # hence the minimum version in hacs.json.
             self.device_entry = device
         else:
             self._attr_name = f"{vin} Picture"

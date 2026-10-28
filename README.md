@@ -24,7 +24,7 @@ publishes it, so it needs **no credentials** and makes **no network calls** of i
 
 ## Prerequisites
 
-- Home Assistant 2024.12 or later
+- Home Assistant 2025.8 or later
 - The core [`renault`](https://www.home-assistant.io/integrations/renault/) integration configured and loaded
 
 ## Installation
