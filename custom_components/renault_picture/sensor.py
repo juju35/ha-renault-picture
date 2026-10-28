@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, ClassVar
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
@@ -101,6 +101,7 @@ async def async_setup_entry(
     for renault_entry, hub in hubs:
         devices = _vehicle_devices(dev_reg, renault_entry)
         entities.extend(RenaultPictureSensor(vin, proxy, devices.get(vin)) for vin, proxy in hub.vehicles.items())
+    _LOGGER.debug("Created %d picture sensor(s) from %d loaded 'renault' entry(ies)", len(entities), len(hubs))
     async_add_entities(entities)
 
 
@@ -111,12 +112,27 @@ class RenaultPictureSensor(SensorEntity):
     _attr_name = "Picture"
     _attr_icon = "mdi:car-side"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    # The assets never change for the lifetime of the hub (a 'renault' reload
+    # rebuilds the sensors), so everything is computed once and never polled.
+    _attr_should_poll = False
+    # Distinguishable from HA's own "unavailable" state in automations, and translated.
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options: ClassVar[list[str]] = ["available", "no_picture"]
+    _attr_translation_key = "picture"
+    # URLs and the raw renditions dump are static diagnostics: keep them out of the recorder.
+    _unrecorded_attributes = frozenset({"available_renditions", "picture_large", "picture_small"})
 
     def __init__(self, vin: str, proxy: Any, device: dr.DeviceEntry | None) -> None:
         """Initialise the sensor and attach it to the vehicle's Renault device."""
         self._vin = vin
-        self._proxy = proxy
         self._attr_unique_id = f"{vin}_picture"
+        self._picture_large = _picture(proxy, _SIZE_LARGE)
+        self._picture_small = _picture(proxy, _SIZE_SMALL)
+        self._available_renditions = _renditions(proxy)
+        if self._picture_large is None:
+            _LOGGER.debug(
+                "Vehicle %s exposes no %s asset; renditions: %s", vin, _PICTURE_ASSET, self._available_renditions
+            )
         if device is not None:
             # Same pattern as core helpers (switch_as_x, template): link to a device
             # owned by another integration, so the sensor is "<vehicle> Picture".
@@ -127,19 +143,19 @@ class RenaultPictureSensor(SensorEntity):
     @property
     def native_value(self) -> str:
         """Short state (<=255 chars): whether a picture is available."""
-        return "available" if _picture(self._proxy, _SIZE_LARGE) else "unavailable"
+        return "available" if self._picture_large else "no_picture"
 
     @property
     def entity_picture(self) -> str | None:
         """Large picture URL, used by the frontend as the entity thumbnail."""
-        return _picture(self._proxy, _SIZE_LARGE)
+        return self._picture_large
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Expose the picture URLs, the VIN and the raw renditions."""
         return {
             "vin": self._vin,
-            "picture_large": _picture(self._proxy, _SIZE_LARGE),
-            "picture_small": _picture(self._proxy, _SIZE_SMALL),
-            "available_renditions": _renditions(self._proxy),
+            "picture_large": self._picture_large,
+            "picture_small": self._picture_small,
+            "available_renditions": self._available_renditions,
         }

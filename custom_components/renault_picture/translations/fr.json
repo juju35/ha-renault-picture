@@ -7,9 +7,17 @@
       }
     },
     "abort": {
-      "already_configured": "Renault Picture est déjà configuré.",
-      "single_instance_allowed": "Une seule instance est autorisée.",
-      "renault_not_loaded": "L'intégration Renault n'est pas configurée. Ajoutez-la d'abord, puis ajoutez Renault Picture."
+      "renault_not_loaded": "L'intégration Renault n'est pas chargée ou n'a pas encore de véhicule. Configurez-la d'abord, puis ajoutez Renault Picture."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "state": {
+          "available": "Disponible",
+          "no_picture": "Pas de photo"
+        }
+      }
     }
   }
 }

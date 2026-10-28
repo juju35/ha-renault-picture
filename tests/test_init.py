@@ -50,6 +50,8 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
     assert entity_id is not None
     state = hass.states.get(entity_id)
     assert state.state == "available"
+    assert state.attributes["device_class"] == "enum"
+    assert state.attributes["options"] == ["available", "no_picture"]
     # Attached to the vehicle's Renault device, and named after it.
     device = dr.async_get(hass).async_get(er.async_get(hass).async_get(entity_id).device_id)
     assert device.name == "Espace"
@@ -63,13 +65,13 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
     assert len(state.attributes["available_renditions"]) == 3
 
 
-async def test_sensor_unavailable_without_picture(hass: HomeAssistant, monkeypatch) -> None:
+async def test_sensor_reports_no_picture(hass: HomeAssistant, monkeypatch) -> None:
     add_renault(hass, monkeypatch, [{"assetType": "VIDEO", "renditions": []}])
     await _setup(hass)
     entity_id = _picture_entity(hass)
     assert entity_id is not None
     state = hass.states.get(entity_id)
-    assert state.state == "unavailable"
+    assert state.state == "no_picture"
     assert state.attributes.get("entity_picture") is None
     assert state.attributes["picture_large"] is None
 
