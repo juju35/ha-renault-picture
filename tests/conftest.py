@@ -47,7 +47,7 @@ def add_renault(
     """Make a loaded 'renault' entry (with one vehicle and its device) visible to the integration.
 
     The real entry is registered but never set up (so teardown has nothing of the
-    'renault' integration to unload); a stand-in reports it as loaded.
+    'renault' integration to unload); the returned stand-in reports it as loaded.
     """
     vehicle = SimpleNamespace(details=SimpleNamespace(assets=assets))
     hub = SimpleNamespace(vehicles={vin: vehicle})
@@ -73,10 +73,10 @@ def add_renault(
 
     monkeypatch.setattr(hass.config_entries, "async_entries", patched)
     hass.config.components.add(RENAULT_DOMAIN)
-    return hub
+    return fake_entry
 
 
 @pytest.fixture
 def fake_renault(hass: HomeAssistant, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
-    """A loaded Renault integration with one vehicle that has a picture."""
+    """A loaded Renault integration (stand-in entry) with one vehicle that has a picture."""
     return add_renault(hass, monkeypatch, PICTURE_ASSETS)

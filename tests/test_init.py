@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from datetime import timedelta
+from types import SimpleNamespace
 
+from homeassistant.config_entries import SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 
@@ -81,6 +84,23 @@ async def test_platform_retries_until_renault_loaded(hass: HomeAssistant, monkey
     await hass.async_block_till_done()
     assert _picture_entity(hass) is not None
 
+
+async def test_reload_on_renault_reload(hass: HomeAssistant, fake_renault) -> None:
+    """A reload of the 'renault' entry rebuilds the sensors from the fresh hub."""
+    await _setup(hass)
+    assert _picture_entity(hass) is not None
+    new_vin = "VF1TESTVIN0000002"
+    # The reloaded 'renault' entry carries a new hub with an extra vehicle.
+    fake_renault.runtime_data = SimpleNamespace(
+        vehicles={
+            VIN: SimpleNamespace(details=SimpleNamespace(assets=PICTURE_ASSETS)),
+            new_vin: SimpleNamespace(details=SimpleNamespace(assets=PICTURE_ASSETS)),
+        }
+    )
+    async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.UPDATED, fake_renault)
+    await hass.async_block_till_done()
+    assert _picture_entity(hass) is not None
+    assert _picture_entity(hass, new_vin) is not None
 
 
 async def test_stale_devices_of_this_integration_removed(hass: HomeAssistant, fake_renault) -> None:
