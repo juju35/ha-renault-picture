@@ -44,15 +44,6 @@ jobs:
 
       - name: Run tests
         run: pytest
-        env:
-          DEPRECATIONS_LOG: ${{ runner.temp }}/deprecations.log
-
-      - name: Annotate deprecated calls
-        if: failure()
-        run: |
-          if [ -f "$RUNNER_TEMP/deprecations.log" ]; then
-            sort -u "$RUNNER_TEMP/deprecations.log" | head -n 20 | while IFS= read -r line; do echo "::error::$line"; done
-          fi
 
   pytest-min-ha:
     name: Tests (minimum Home Assistant)

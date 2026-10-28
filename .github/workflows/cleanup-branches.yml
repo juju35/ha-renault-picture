@@ -15,6 +15,8 @@ permissions:
 
 jobs:
   cleanup:
+    # On a fork PR github.token is read-only: skip instead of failing (the weekly run catches up).
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - name: Delete merged branches
