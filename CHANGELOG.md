@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.0
+
+### Changes
+- Minimum Home Assistant raised to 2025.8: attaching the picture sensor to the vehicle's Renault device needs it (on older versions the sensor registered without a device).
+- The sensor state is now an enum, `available` / `no_picture` (translated in English and French), instead of the literal `unavailable`, which could not be told apart from Home Assistant's own unavailable state. Update automations that tested `unavailable`.
+- The picture URLs are computed once and the sensor is no longer polled; `picture_large`, `picture_small` and `available_renditions` are no longer recorded in the history.
+- HACS now installs the release zip instead of downloading the repository.
+
+### Fixes
+- The sensors are created even when the Renault integration is not loaded yet at startup (the platform setup is retried instead of giving up until a restart).
+- The integration reloads when a Renault config entry reloads or is removed, so the sensors no longer point at a stale hub and newly added vehicles show up.
+- The config flow refuses to create an entry until a Renault entry is loaded with vehicles, instead of creating one that produced no sensor.
+- Debug logs now show the number of sensors and vehicles without a picture.
+- README: the ha-renault-card example reflects the card's actual behaviour.
+
 ## 0.1.1
 
 ### Fixes
