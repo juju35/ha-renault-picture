@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+
+### Features
+- German and Spanish translations (config flow and sensor states).
+
 ## 0.2.0
 
 ### Changes
