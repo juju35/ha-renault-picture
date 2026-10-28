@@ -2,15 +2,18 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
+
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from homeassistant.util import dt as dt_util
+from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 
 from custom_components.renault_picture.const import DOMAIN, RENAULT_DOMAIN
 
-from .conftest import VIN, add_renault
+from .conftest import PICTURE_ASSETS, VIN, add_renault
 
 
 async def _setup(hass: HomeAssistant) -> MockConfigEntry:
@@ -68,9 +71,16 @@ async def test_sensor_unavailable_without_picture(hass: HomeAssistant, monkeypat
     assert state.attributes["picture_large"] is None
 
 
-async def test_no_entity_without_renault(hass: HomeAssistant) -> None:
+async def test_platform_retries_until_renault_loaded(hass: HomeAssistant, monkeypatch) -> None:
+    """Without a loaded 'renault' entry the platform raises PlatformNotReady and retries."""
     await _setup(hass)
     assert _picture_entity(hass) is None
+    # 'renault' finishes loading later (startup race): the scheduled retry finds it.
+    add_renault(hass, monkeypatch, PICTURE_ASSETS)
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=60))
+    await hass.async_block_till_done()
+    assert _picture_entity(hass) is not None
+
 
 
 async def test_stale_devices_of_this_integration_removed(hass: HomeAssistant, fake_renault) -> None:

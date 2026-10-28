@@ -9,6 +9,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import PlatformNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -92,8 +93,9 @@ async def async_setup_entry(
 
     hubs = _renault_hubs(hass)
     if not hubs:
-        _LOGGER.warning("No loaded 'renault' integration found; no picture sensor created")
-        return
+        # Startup race, reauth in progress, or 'renault' simply loaded after us:
+        # let HA retry the platform setup instead of staying empty until a restart.
+        raise PlatformNotReady("No loaded 'renault' integration found")
 
     entities: list[RenaultPictureSensor] = []
     for renault_entry, hub in hubs:
