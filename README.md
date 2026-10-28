@@ -24,7 +24,7 @@ publishes it, so it needs **no credentials** and makes **no network calls** of i
 
 ## Prerequisites
 
-- Home Assistant 2024.12 or later
+- Home Assistant 2025.8 or later
 - The core [`renault`](https://www.home-assistant.io/integrations/renault/) integration configured and loaded
 
 ## Installation
@@ -60,7 +60,7 @@ One sensor per vehicle, attached to the existing Renault device:
 
 | | |
 |---|---|
-| `state` | `available` / `unavailable` (kept short; a picture URL is too long for a state) |
+| `state` | `available` / `no_picture` (kept short; a picture URL is too long for a state, and `no_picture` stays distinguishable from Home Assistant's own `unavailable`) |
 | `entity_picture` | the large picture URL — shown as the entity thumbnail |
 | attribute `picture_large` | large render URL |
 | attribute `picture_small` | thumbnail render URL |
@@ -69,14 +69,12 @@ One sensor per vehicle, attached to the existing Renault device:
 
 ## Use with ha-renault-card
 
-Point the card's `image` option at the picture URL:
+[ha-renault-card](https://github.com/juju35/ha-renault-card) picks the picture up automatically: it finds this integration's sensor on the vehicle's device and uses its `picture_large` URL. Leave the card's `image` option empty; set it only to override the MyRenault photo with a plain URL (the option does not render templates):
 
 ```yaml
 type: custom:renault-card
-image: "{{ state_attr('sensor.espace_picture', 'picture_large') }}"
+image: /local/renault/clio.png
 ```
-
-(A future card version can read the sensor automatically.)
 
 ## How it works
 

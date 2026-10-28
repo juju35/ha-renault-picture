@@ -44,15 +44,6 @@ jobs:
 
       - name: Run tests
         run: pytest
-        env:
-          DEPRECATIONS_LOG: ${{ runner.temp }}/deprecations.log
-
-      - name: Annotate deprecated calls
-        if: failure()
-        run: |
-          if [ -f "$RUNNER_TEMP/deprecations.log" ]; then
-            sort -u "$RUNNER_TEMP/deprecations.log" | head -n 20 | while IFS= read -r line; do echo "::error::$line"; done
-          fi
 
   pytest-min-ha:
     name: Tests (minimum Home Assistant)
@@ -66,9 +57,11 @@ jobs:
         with:
           python-version: "3.13"
 
-      # 0.13.190 pins homeassistant==2024.12.0, the minimum in hacs.json.
+      # 0.13.269 pins homeassistant==2025.8.0, the minimum in hacs.json
+      # (entity_platform only honors a pre-set device_entry since 2025.8).
+      # pycares<5: aiodns 3.5.0 (pinned by HA 2025.8) breaks on pycares 5.
       - name: Install dependencies
-        run: pip install "pytest-homeassistant-custom-component==0.13.190"
+        run: pip install "pytest-homeassistant-custom-component==0.13.269" "pycares<5"
 
       - name: Run tests
         run: pytest

@@ -7,7 +7,8 @@ from typing import Any
 import voluptuous as vol
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 
-from .const import DOMAIN, RENAULT_DOMAIN
+from .const import DOMAIN
+from .sensor import _renault_hubs
 
 
 class RenaultPictureConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -17,9 +18,10 @@ class RenaultPictureConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle the initial step."""
-        await self.async_set_unique_id(DOMAIN)
-        self._abort_if_unique_id_configured()
-        if RENAULT_DOMAIN not in self.hass.config.components:
+        # single_config_entry in the manifest already blocks a second entry upstream.
+        if not _renault_hubs(self.hass):
+            # Loaded component is not enough: without a LOADED entry with vehicles
+            # the created entry would silently produce no sensor.
             return self.async_abort(reason="renault_not_loaded")
         if user_input is not None:
             return self.async_create_entry(title="Renault Picture", data={})
