@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import timedelta
 from types import SimpleNamespace
 
-from homeassistant.config_entries import SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange
+from homeassistant.config_entries import SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange, ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers import device_registry as dr
@@ -19,12 +19,25 @@ from custom_components.renault_picture.const import DOMAIN, RENAULT_DOMAIN
 from .conftest import PICTURE_ASSETS, VIN, add_renault
 
 
-async def _setup(hass: HomeAssistant) -> MockConfigEntry:
+async def _setup(hass: HomeAssistant, *, expect_loaded: bool = True) -> MockConfigEntry:
     entry = MockConfigEntry(domain=DOMAIN, unique_id=DOMAIN)
     entry.add_to_hass(hass)
-    assert await hass.config_entries.async_setup(entry.entry_id)
+    assert await hass.config_entries.async_setup(entry.entry_id) is expect_loaded
     await hass.async_block_till_done()
     return entry
+
+
+def _count_reloads(hass: HomeAssistant, monkeypatch) -> list[str]:
+    """Record the reloads scheduled from now on (and still perform them)."""
+    calls: list[str] = []
+    original = hass.config_entries.async_schedule_reload
+
+    def recording(entry_id: str) -> None:
+        calls.append(entry_id)
+        original(entry_id)
+
+    monkeypatch.setattr(hass.config_entries, "async_schedule_reload", recording)
+    return calls
 
 
 def _picture_entity(hass: HomeAssistant, vin: str = VIN) -> str | None:
@@ -65,6 +78,13 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
     assert len(state.attributes["available_renditions"]) == 3
 
 
+async def test_sensor_name_is_translated(hass: HomeAssistant, fake_renault) -> None:
+    """The entity name comes from the translations, not a hard-coded English string."""
+    hass.config.language = "fr"
+    await _setup(hass)
+    assert hass.states.get(_picture_entity(hass)).attributes["friendly_name"] == "Espace Photo"
+
+
 async def test_sensor_reports_no_picture(hass: HomeAssistant, monkeypatch) -> None:
     add_renault(hass, monkeypatch, [{"assetType": "VIDEO", "renditions": []}])
     await _setup(hass)
@@ -76,20 +96,43 @@ async def test_sensor_reports_no_picture(hass: HomeAssistant, monkeypatch) -> No
     assert state.attributes["picture_large"] is None
 
 
-async def test_platform_retries_until_renault_loaded(hass: HomeAssistant, monkeypatch) -> None:
-    """Without a loaded 'renault' entry the platform raises PlatformNotReady and retries."""
-    await _setup(hass)
+async def test_entry_retries_until_renault_loaded(hass: HomeAssistant, monkeypatch) -> None:
+    """Without a loaded 'renault' entry the setup raises ConfigEntryNotReady and HA retries it."""
+    entry = await _setup(hass, expect_loaded=False)
+    assert entry.state is ConfigEntryState.SETUP_RETRY  # visible as "Retrying setup", not "Loaded"
     assert _picture_entity(hass) is None
     # 'renault' finishes loading later (startup race): the scheduled retry finds it.
     add_renault(hass, monkeypatch, PICTURE_ASSETS)
     async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=60))
-    await hass.async_block_till_done()
+    await hass.async_block_till_done(wait_background_tasks=True)
+    assert entry.state is ConfigEntryState.LOADED
     assert _picture_entity(hass) is not None
 
 
-async def test_reload_on_renault_reload(hass: HomeAssistant, fake_renault) -> None:
-    """A reload of the 'renault' entry rebuilds the sensors from the fresh hub."""
+async def test_no_reload_when_renault_hub_unchanged(hass: HomeAssistant, fake_renault, monkeypatch) -> None:
+    """A plain UPDATED signal (rename, options, reauth before its reload) keeps the same hub: no reload."""
     await _setup(hass)
+    reloads = _count_reloads(hass, monkeypatch)
+    async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.UPDATED, fake_renault)
+    await hass.async_block_till_done()
+    assert reloads == []
+
+
+async def test_reload_when_renault_removed(hass: HomeAssistant, fake_renault, monkeypatch) -> None:
+    """Removing the 'renault' entry reloads us, and the entry then waits in setup retry."""
+    entry = await _setup(hass)
+    reloads = _count_reloads(hass, monkeypatch)
+    fake_renault.state = ConfigEntryState.NOT_LOADED  # no loaded 'renault' entry any more
+    async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.REMOVED, fake_renault)
+    await hass.async_block_till_done()
+    assert reloads == [entry.entry_id]
+    assert entry.state is ConfigEntryState.SETUP_RETRY
+
+
+async def test_reload_on_renault_reload(hass: HomeAssistant, fake_renault, monkeypatch) -> None:
+    """A reload of the 'renault' entry rebuilds the sensors from the fresh hub."""
+    entry = await _setup(hass)
+    reloads = _count_reloads(hass, monkeypatch)
     assert _picture_entity(hass) is not None
     new_vin = "VF1TESTVIN0000002"
     # The reloaded 'renault' entry carries a new hub with an extra vehicle.
@@ -101,6 +144,7 @@ async def test_reload_on_renault_reload(hass: HomeAssistant, fake_renault) -> No
     )
     async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.UPDATED, fake_renault)
     await hass.async_block_till_done()
+    assert reloads == [entry.entry_id]
     assert _picture_entity(hass) is not None
     assert _picture_entity(hass, new_vin) is not None
 
