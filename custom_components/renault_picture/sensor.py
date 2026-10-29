@@ -106,7 +106,6 @@ class RenaultPictureSensor(SensorEntity):
     """Publishes the official vehicle picture URL (state kept short)."""
 
     _attr_has_entity_name = True
-    _attr_name = "Picture"
     _attr_icon = "mdi:car-side"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     # The assets never change for the lifetime of the hub (a 'renault' reload
@@ -115,6 +114,7 @@ class RenaultPictureSensor(SensorEntity):
     # Distinguishable from HA's own "unavailable" state in automations, and translated.
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options: ClassVar[list[str]] = ["available", "no_picture"]
+    # Also gives the translated entity name ("Espace Photo" in French).
     _attr_translation_key = "picture"
     # URLs and the raw renditions dump are static diagnostics: keep them out of the recorder.
     _unrecorded_attributes = frozenset({"available_renditions", "picture_large", "picture_small"})
@@ -132,11 +132,12 @@ class RenaultPictureSensor(SensorEntity):
             )
         if device is not None:
             # Same pattern as core helpers (switch_as_x, template): link to a device
-            # owned by another integration, so the sensor is "<vehicle> Picture".
+            # owned by another integration, so the sensor is "<vehicle> <translated name>".
             # entity_platform only honors a pre-set device_entry since HA 2025.8,
             # hence the minimum version in hacs.json.
             self.device_entry = device
         else:
+            # No device to be named after: untranslated fallback that keeps the VIN.
             self._attr_name = f"{vin} Picture"
 
     @property

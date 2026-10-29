@@ -13,6 +13,7 @@
   "entity": {
     "sensor": {
       "picture": {
+        "name": "Bild",
         "state": {
           "available": "Verfügbar",
           "no_picture": "Kein Bild"

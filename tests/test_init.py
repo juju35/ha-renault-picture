@@ -78,6 +78,13 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
     assert len(state.attributes["available_renditions"]) == 3
 
 
+async def test_sensor_name_is_translated(hass: HomeAssistant, fake_renault) -> None:
+    """The entity name comes from the translations, not a hard-coded English string."""
+    hass.config.language = "fr"
+    await _setup(hass)
+    assert hass.states.get(_picture_entity(hass)).attributes["friendly_name"] == "Espace Photo"
+
+
 async def test_sensor_reports_no_picture(hass: HomeAssistant, monkeypatch) -> None:
     add_renault(hass, monkeypatch, [{"assetType": "VIDEO", "renditions": []}])
     await _setup(hass)
