@@ -82,8 +82,11 @@ The core `renault` integration loads each vehicle's details from Kamereon, which
 include a `PICTURE` asset with `ONE_MYRENAULT_LARGE` and `ONE_MYRENAULT_SMALL`
 renditions. This integration reads those straight from the loaded data
 (`entry.runtime_data`), so it adds no API calls and needs no credentials. If a
-future Renault or HACS change moves that data, the sensor reports `unavailable`
-instead of breaking, and `available_renditions` shows what the car actually exposes.
+future change of the Home Assistant `renault` integration moves the picture
+assets, the sensor reports `no_picture` instead of breaking, and
+`available_renditions` shows what the car actually exposes. While no `renault`
+entry is loaded with vehicles (startup, reauth, integration removed), the entry
+shows **Retrying setup** and Home Assistant retries it on its own.
 
 To debug:
 
