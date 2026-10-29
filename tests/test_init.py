@@ -161,3 +161,73 @@ async def test_stale_devices_of_this_integration_removed(hass: HomeAssistant, fa
     assert not dr.async_entries_for_config_entry(dev_reg, entry.entry_id)
     entity = er.async_get(hass).async_get(_picture_entity(hass))
     assert dev_reg.async_get(entity.device_id).name == "Espace"
+
+
+def _add_empty_renault(hass: HomeAssistant, monkeypatch) -> SimpleNamespace:
+    """Add a second loaded 'renault' entry whose account has no vehicle."""
+    real_entry = MockConfigEntry(domain=RENAULT_DOMAIN)
+    real_entry.add_to_hass(hass)
+    empty = SimpleNamespace(
+        domain=RENAULT_DOMAIN,
+        entry_id=real_entry.entry_id,
+        state=ConfigEntryState.LOADED,
+        runtime_data=SimpleNamespace(vehicles={}),
+    )
+    previous = hass.config_entries.async_entries
+
+    def patched(domain=None, *args, **kwargs):
+        if domain == RENAULT_DOMAIN:
+            return [*previous(domain, *args, **kwargs), empty]
+        return previous(domain, *args, **kwargs)
+
+    monkeypatch.setattr(hass.config_entries, "async_entries", patched)
+    return empty
+
+
+async def test_no_reload_loop_for_renault_entry_without_vehicles(
+    hass: HomeAssistant, fake_renault, monkeypatch
+) -> None:
+    """A loaded 'renault' entry with no vehicle (second account) does not reload us on each update."""
+    empty = _add_empty_renault(hass, monkeypatch)
+    entry = await _setup(hass)
+    reloads = _count_reloads(hass, monkeypatch)
+    for _ in range(2):
+        async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.UPDATED, empty)
+        await hass.async_block_till_done()
+    assert reloads == []
+    assert entry.state is ConfigEntryState.LOADED
+
+
+async def test_reload_when_renault_entry_without_vehicles_gets_one(
+    hass: HomeAssistant, fake_renault, monkeypatch
+) -> None:
+    """When that empty account reloads with a vehicle, we reload once and its sensor shows up."""
+    empty = _add_empty_renault(hass, monkeypatch)
+    entry = await _setup(hass)
+    reloads = _count_reloads(hass, monkeypatch)
+    new_vin = "VF1TESTVIN0000003"
+    empty.runtime_data = SimpleNamespace(
+        vehicles={new_vin: SimpleNamespace(details=SimpleNamespace(assets=PICTURE_ASSETS))}
+    )
+    async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.UPDATED, empty)
+    await hass.async_block_till_done()
+    assert reloads == [entry.entry_id]
+    assert _picture_entity(hass, new_vin) is not None
+    # The same hub signalled again after our reload: no further reload.
+    async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.UPDATED, empty)
+    await hass.async_block_till_done()
+    assert reloads == [entry.entry_id]
+
+
+async def test_no_reload_when_renault_entry_without_vehicles_removed(
+    hass: HomeAssistant, fake_renault, monkeypatch
+) -> None:
+    """Removing a 'renault' entry that fed no sensor (no vehicle) leaves our sensors alone."""
+    empty = _add_empty_renault(hass, monkeypatch)
+    entry = await _setup(hass)
+    reloads = _count_reloads(hass, monkeypatch)
+    async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.REMOVED, empty)
+    await hass.async_block_till_done()
+    assert reloads == []
+    assert entry.state is ConfigEntryState.LOADED
+    assert _picture_entity(hass) is not None
