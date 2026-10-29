@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1
+
+### Fixes
+- The sensor name is now translated ("Espace Photo" in French, "Bild" in German, "Imagen" in Spanish) instead of always "Picture".
+- When no Renault entry is loaded with vehicles (startup, reauth, Renault integration removed), the entry now shows "Retrying setup" and Home Assistant retries it, instead of showing "Loaded" with no sensor.
+- The integration no longer reloads on every Renault entry update (rename, options, the first step of a reauth): only when the Renault data actually changes or the entry is removed.
+- README: the sensor reports `no_picture`, not `unavailable`, when the picture data moves.
+
 ## 0.3.0
 
 ### Features
