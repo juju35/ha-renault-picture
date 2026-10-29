@@ -9,7 +9,6 @@ from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import PlatformNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -24,7 +23,7 @@ _SIZE_LARGE = "LARGE"
 _SIZE_SMALL = "SMALL"
 
 
-def _renault_hubs(hass: HomeAssistant) -> list[tuple[ConfigEntry, Any]]:
+def renault_hubs(hass: HomeAssistant) -> list[tuple[ConfigEntry, Any]]:
     """Return (entry, hub) for every loaded core 'renault' config entry."""
     hubs: list[tuple[ConfigEntry, Any]] = []
     for entry in hass.config_entries.async_entries(RENAULT_DOMAIN):
@@ -91,11 +90,9 @@ async def async_setup_entry(
     for device in dr.async_entries_for_config_entry(dev_reg, entry.entry_id):
         dev_reg.async_update_device(device.id, remove_config_entry_id=entry.entry_id)
 
-    hubs = _renault_hubs(hass)
-    if not hubs:
-        # Startup race, reauth in progress, or 'renault' simply loaded after us:
-        # let HA retry the platform setup instead of staying empty until a restart.
-        raise PlatformNotReady("No loaded 'renault' integration found")
+    # async_setup_entry (__init__.py) already waited for a loaded 'renault' entry;
+    # if it went away since, the change listener reloads us.
+    hubs = renault_hubs(hass)
 
     entities: list[RenaultPictureSensor] = []
     for renault_entry, hub in hubs:
