@@ -8,6 +8,8 @@ its own.
 
 from __future__ import annotations
 
+from typing import Any
+
 from homeassistant.config_entries import (
     SIGNAL_CONFIG_ENTRY_CHANGED,
     ConfigEntry,
@@ -33,9 +35,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # HA shows "Retrying setup" and retries the whole entry with a backoff.
         raise ConfigEntryNotReady("No loaded 'renault' integration with vehicles found")
 
-    # Hub each 'renault' entry had when the sensors were built: a reload is only
-    # needed when it changes (or the entry goes away), not on every UPDATED signal.
-    known_hubs: dict[str, object] = {renault_entry.entry_id: hub for renault_entry, hub in hubs}
+    # Hub of every loaded 'renault' entry when the sensors were built, including
+    # accounts without vehicles (otherwise each of their UPDATED signals would look
+    # like a new hub and reload us forever): a reload is only needed when a hub
+    # changes or an entry that fed sensors goes away.
+    known_hubs: dict[str, Any] = {
+        renault_entry.entry_id: renault_entry.runtime_data
+        for renault_entry in hass.config_entries.async_entries(RENAULT_DOMAIN)
+        if renault_entry.state is ConfigEntryState.LOADED and getattr(renault_entry, "runtime_data", None) is not None
+    }
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
@@ -52,7 +60,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if changed_entry.domain != RENAULT_DOMAIN:
             return
         if change is ConfigEntryChange.REMOVED:
-            if changed_entry.entry_id in known_hubs:
+            # An entry without vehicles fed no sensor: removing it changes nothing.
+            if getattr(known_hubs.pop(changed_entry.entry_id, None), "vehicles", None):
                 hass.config_entries.async_schedule_reload(entry.entry_id)
             return
         if changed_entry.state is not ConfigEntryState.LOADED:

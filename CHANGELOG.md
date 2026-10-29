@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2
+
+### Fixes
+- A Renault entry whose account has no vehicle (for example a second account) no longer makes the integration reload on each of its updates, again and again.
+
 ## 0.3.1
 
 ### Fixes
