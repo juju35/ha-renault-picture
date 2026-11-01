@@ -8,6 +8,8 @@ on:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
+  # Called by release.yml: a release waits for this workflow to pass.
+  workflow_call:
 
 permissions:
   contents: read
