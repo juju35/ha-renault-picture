@@ -15,7 +15,7 @@
       "picture": {
         "name": "Slika",
         "state": {
-          "available": "Dostupno",
+          "available": "Dostupna",
           "no_picture": "Bez slike"
         }
       }
