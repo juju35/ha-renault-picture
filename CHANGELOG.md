@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.4 - 2026-11-01
+
+### Features
+- Added Italian, Dutch, European Portuguese and Polish translations.
+
 ## 0.3.3 - 2026-11-01
 
 ### Features
