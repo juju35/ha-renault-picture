@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.5 - 2026-11-01
+
+### Fixes
+- Home Assistant set to Brazilian Portuguese now shows the integration in Portuguese instead of English.
+- Serbian: the "Available" state now agrees with the feminine entity name ("Доступна" / "Dostupna").
+
 ## 0.3.4 - 2026-11-01
 
 ### Features
