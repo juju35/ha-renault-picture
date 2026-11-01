@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import timedelta
 from types import SimpleNamespace
 
+import pytest
 from homeassistant.config_entries import SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange, ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
@@ -78,11 +79,20 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
     assert len(state.attributes["available_renditions"]) == 3
 
 
-async def test_sensor_name_is_translated(hass: HomeAssistant, fake_renault) -> None:
-    """The entity name comes from the translations, not a hard-coded English string."""
-    hass.config.language = "fr"
+@pytest.mark.parametrize(
+    ("language", "name"),
+    [
+        ("fr", "Espace Photo"),
+        ("sr", "Espace Слика"),
+        ("sr-Latn", "Espace Slika"),  # its own file, not the Cyrillic one
+        ("pt-BR", "Espace Picture"),  # not shipped: English
+    ],
+)
+async def test_sensor_name_is_translated(hass: HomeAssistant, fake_renault, language: str, name: str) -> None:
+    """The entity name comes from the translations of Home Assistant's language, not a hard-coded English string."""
+    hass.config.language = language
     await _setup(hass)
-    assert hass.states.get(_picture_entity(hass)).attributes["friendly_name"] == "Espace Photo"
+    assert hass.states.get(_picture_entity(hass)).attributes["friendly_name"] == name
 
 
 async def test_sensor_reports_no_picture(hass: HomeAssistant, monkeypatch) -> None:
