@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Приказује званичну MyRenault слику возила као сензор. Нису потребни подаци за пријаву: поново се користе подаци које је интеграција Renault већ учитала."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "Интеграција Renault није учитана или још нема возила. Прво је подеси, па додај Renault Picture."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Слика",
+        "state": {
+          "available": "Доступно",
+          "no_picture": "Без слике"
+        }
+      }
+    }
+  }
+}

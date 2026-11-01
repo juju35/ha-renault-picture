@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Stelt de officiële MyRenault-voertuigafbeelding beschikbaar als sensor. Geen inloggegevens nodig: de gegevens die de Renault-integratie al heeft geladen, worden hergebruikt."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "De Renault-integratie is niet geladen of heeft nog geen voertuigen. Stel deze eerst in en voeg daarna Renault Picture toe."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Afbeelding",
+        "state": {
+          "available": "Beschikbaar",
+          "no_picture": "Geen afbeelding"
+        }
+      }
+    }
+  }
+}
