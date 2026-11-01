@@ -35,9 +35,22 @@ def _load(lang: str) -> dict[str, str]:
 
 
 def test_languages() -> None:
-    """English, French, German, Spanish, Serbian (both scripts), Italian, Dutch, Portuguese and Polish are shipped."""
+    """Every shipped language, including both Serbian scripts and both Portuguese variants."""
     shipped = {p.stem for p in TRANSLATIONS.glob("*.json")}
-    assert shipped >= {"en", "fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl"}
+    assert shipped >= {"en", "fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pt-BR", "pl"}
+
+
+def test_brazilian_portuguese_matches_portuguese() -> None:
+    """Home Assistant does not fall back from pt-BR to pt, so pt-BR ships the same strings."""
+    assert _load("pt-BR") == _load("pt")
+
+
+def test_serbian_state_agrees_with_feminine_name() -> None:
+    """The entity name Слика / Slika is feminine, so its "available" state is too."""
+    for lang, name, available in (("sr", "Слика", "Доступна"), ("sr-Latn", "Slika", "Dostupna")):
+        strings = _load(lang)
+        assert strings["entity.sensor.picture.name"] == name
+        assert strings["entity.sensor.picture.state.available"] == available
 
 
 def test_strings_match_english() -> None:
