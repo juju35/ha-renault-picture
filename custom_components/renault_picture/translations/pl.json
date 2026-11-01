@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Udostępnia oficjalne zdjęcie pojazdu z MyRenault jako sensor. Dane logowania nie są potrzebne: wykorzystywane są dane już wczytane przez integrację Renault."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "Integracja Renault nie jest wczytana lub nie ma jeszcze pojazdów. Najpierw ją skonfiguruj, a następnie dodaj Renault Picture."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Zdjęcie",
+        "state": {
+          "available": "Dostępne",
+          "no_picture": "Brak zdjęcia"
+        }
+      }
+    }
+  }
+}

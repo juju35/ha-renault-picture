@@ -85,7 +85,14 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
         ("fr", "Espace Photo"),
         ("sr", "Espace Слика"),
         ("sr-Latn", "Espace Slika"),  # its own file, not the Cyrillic one
-        ("pt-BR", "Espace Picture"),  # not shipped: English
+        ("it", "Espace Immagine"),
+        ("nl", "Espace Afbeelding"),
+        ("pt", "Espace Imagem"),
+        ("pl", "Espace Zdjęcie"),
+        # Home Assistant loads the file of its exact language code, then English:
+        # pt-BR is a language of its own, not shipped here.
+        ("pt-BR", "Espace Picture"),
+        ("ja", "Espace Picture"),
     ],
 )
 async def test_sensor_name_is_translated(hass: HomeAssistant, fake_renault, language: str, name: str) -> None:
