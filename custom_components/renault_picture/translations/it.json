@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Espone l'immagine ufficiale MyRenault del veicolo come sensore. Nessuna credenziale necessaria: riutilizza i dati già caricati dall'integrazione Renault."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "L'integrazione Renault non è caricata o non ha ancora veicoli. Configurala prima, poi aggiungi Renault Picture."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Immagine",
+        "state": {
+          "available": "Disponibile",
+          "no_picture": "Nessuna immagine"
+        }
+      }
+    }
+  }
+}
