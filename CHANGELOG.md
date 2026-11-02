@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.3.5 - 2026-11-01
+## 1.0.0 - 2026-11-02
+
+First stable release.
 
 ### Fixes
 - Home Assistant set to Brazilian Portuguese now shows the integration in Portuguese instead of English.
