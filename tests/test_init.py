@@ -89,9 +89,9 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
         ("nl", "Espace Afbeelding"),
         ("pt", "Espace Imagem"),
         ("pl", "Espace Zdjęcie"),
-        # Home Assistant loads the file of its exact language code, then English:
-        # pt-BR is a language of its own, not shipped here.
-        ("pt-BR", "Espace Picture"),
+        # Home Assistant loads the file of its exact language code, then English
+        # (no pt-BR -> pt fallback), so pt-BR ships its own file.
+        ("pt-BR", "Espace Imagem"),
         ("ja", "Espace Picture"),
     ],
 )

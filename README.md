@@ -20,7 +20,7 @@ publishes it, so it needs **no credentials** and makes **no network calls** of i
 - One `sensor.<vehicle>_picture` per vehicle, attached to the existing Renault device
 - The official picture URL as `entity_picture` (shown as the entity thumbnail) and in attributes
 - No credentials, no extra API calls: the data comes from the `renault` integration already running
-- English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese and Polish
+- English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, Portuguese (European and Brazilian) and Polish
 
 ## Prerequisites
 
@@ -123,6 +123,7 @@ The integration follows the language of Home Assistant. Currently supported:
 | Italiano | `it` |
 | Nederlands | `nl` |
 | Português | `pt` |
+| Português (Brasil) | `pt-BR` |
 | Polski | `pl` |
 
 ## License
