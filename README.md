@@ -22,6 +22,14 @@ publishes it, so it needs **no credentials** and makes **no network calls** of i
 - No credentials, no extra API calls: the data comes from the `renault` integration already running
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, Portuguese (European and Brazilian) and Polish
 
+## Supported integrations
+
+| Integration | What it reads |
+|---|---|
+| [Renault](https://www.home-assistant.io/integrations/renault/) (built in) | The vehicle details the integration already fetched (no extra API calls, no credentials), to expose the official MyRenault picture of each vehicle |
+
+The picture is shown by [Renault Card](https://github.com/juju35/ha-renault-card), see [Use with ha-renault-card](#use-with-ha-renault-card).
+
 ## Prerequisites
 
 - Home Assistant 2025.8 or later
