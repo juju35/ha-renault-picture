@@ -5,7 +5,7 @@
 [![Validate](https://github.com/juju35/ha-renault-picture/actions/workflows/validate.yml/badge.svg)](https://github.com/juju35/ha-renault-picture/actions/workflows/validate.yml)
 [![Lint](https://github.com/juju35/ha-renault-picture/actions/workflows/lint.yml/badge.svg)](https://github.com/juju35/ha-renault-picture/actions/workflows/lint.yml)
 [![Release](https://img.shields.io/github/v/release/juju35/ha-renault-picture)](https://github.com/juju35/ha-renault-picture/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/juju35/ha-renault-picture/blob/main/LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/julienstep9)
 
 Home Assistant integration that exposes the **official MyRenault vehicle picture**
@@ -115,7 +115,7 @@ pip install -r requirements_test.txt && pytest
 ### Releasing
 
 1. Bump the version in `custom_components/renault_picture/manifest.json`
-2. Add a `## <version>` section at the top of [CHANGELOG.md](CHANGELOG.md)
+2. Add a `## <version>` section at the top of [CHANGELOG.md](https://github.com/juju35/ha-renault-picture/blob/main/CHANGELOG.md)
 3. Push to `main`: the **Release** workflow creates the tag and the GitHub release with the changelog section as notes
 
 ## Translations
@@ -150,7 +150,7 @@ The integration follows the language of Home Assistant. Currently supported:
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/juju35/ha-renault-picture/blob/main/LICENSE)
 
 Not affiliated with Renault.
 
