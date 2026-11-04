@@ -38,7 +38,7 @@ def test_languages() -> None:
     """Every shipped language, including both Serbian scripts and both Portuguese variants."""
     shipped = {p.stem for p in TRANSLATIONS.glob("*.json")}
     assert shipped >= {"en", "fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pt-BR", "pl"}
-    assert shipped >= {"ro", "da", "sv", "bg", "ru", "uk", "hu", "ga", "sk", "cs", "sl", "mt", "lv", "el"}
+    assert shipped >= {"ro", "da", "sv", "bg", "ru", "uk", "hu", "sk", "cs", "sl", "lv", "el"}
 
 
 def test_brazilian_portuguese_matches_portuguese() -> None:

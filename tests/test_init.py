@@ -96,11 +96,9 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
         ("ru", "Espace Изображение"),
         ("uk", "Espace Зображення"),
         ("hu", "Espace Kép"),
-        ("ga", "Espace Pictiúr"),
         ("sk", "Espace Obrázok"),
         ("cs", "Espace Obrázek"),
         ("sl", "Espace Slika"),
-        ("mt", "Espace Stampa"),
         ("lv", "Espace Attēls"),
         ("el", "Espace Εικόνα"),
         # Home Assistant loads the file of its exact language code, then English

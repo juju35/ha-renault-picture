@@ -3,7 +3,7 @@
 ## 1.0.1 - 2026-11-04
 
 ### Features
-- Added Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Irish, Slovak, Czech, Slovenian, Maltese, Latvian and Greek translations.
+- Added Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek translations.
 
 ## 1.0.0 - 2026-11-02
 
