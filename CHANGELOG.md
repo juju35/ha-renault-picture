@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 - 2026-11-04
+
+### Documentation
+- README: images and links use absolute URLs, so the screenshots, icons, badges and links display in HACS (relative paths broke there).
+
 ## 1.0.1 - 2026-11-04
 
 ### Features
