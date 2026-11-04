@@ -153,3 +153,9 @@ The integration follows the language of Home Assistant. Currently supported:
 [MIT](LICENSE)
 
 Not affiliated with Renault.
+
+## Support
+
+If you find this project useful, you can support its development:
+
+<a href="https://buymeacoffee.com/julienstep9"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" height="50"></a>
