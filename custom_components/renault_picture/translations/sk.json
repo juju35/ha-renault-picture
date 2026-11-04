@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Sprístupňuje oficiálny obrázok vozidla z MyRenault ako senzor. Nie sú potrebné prihlasovacie údaje: opätovne sa používajú údaje, ktoré už načítala integrácia Renault."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "Integrácia Renault nie je načítaná alebo zatiaľ nemá žiadne vozidlá. Najprv ju nastavte a potom pridajte Renault Picture."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Obrázok",
+        "state": {
+          "available": "Dostupný",
+          "no_picture": "Bez obrázka"
+        }
+      }
+    }
+  }
+}

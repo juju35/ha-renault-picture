@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "A jármű hivatalos MyRenault-képét érzékelőként teszi elérhetővé. Nincs szükség hitelesítő adatokra: a Renault-integráció által már betöltött adatokat használja fel újra."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "A Renault-integráció nincs betöltve, vagy még nincs járműve. Először állítsa be, majd adja hozzá a Renault Picture-t."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Kép",
+        "state": {
+          "available": "Elérhető",
+          "no_picture": "Nincs kép"
+        }
+      }
+    }
+  }
+}

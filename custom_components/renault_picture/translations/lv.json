@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Nodrošina oficiālo MyRenault transportlīdzekļa attēlu kā sensoru. Pieteikšanās dati nav nepieciešami: tiek atkārtoti izmantoti dati, ko Renault integrācija jau ir ielādējusi."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "Renault integrācija nav ielādēta vai tai vēl nav transportlīdzekļu. Vispirms to iestatiet, pēc tam pievienojiet Renault Picture."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Attēls",
+        "state": {
+          "available": "Pieejams",
+          "no_picture": "Nav attēla"
+        }
+      }
+    }
+  }
+}
