@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Expune ca senzor imaginea oficială MyRenault a vehiculului. Nu sunt necesare credențiale: reutilizează datele deja încărcate de integrarea Renault."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "Integrarea Renault nu este încărcată sau nu are încă vehicule. Configurați-o mai întâi, apoi adăugați Renault Picture."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Imagine",
+        "state": {
+          "available": "Disponibilă",
+          "no_picture": "Nicio imagine"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Renault Picture",
+        "description": "Viser det officielle MyRenault-billede af køretøjet som en sensor. Ingen loginoplysninger nødvendige: de data, som Renault-integrationen allerede har indlæst, genbruges."
+      }
+    },
+    "abort": {
+      "renault_not_loaded": "Renault-integrationen er ikke indlæst eller har endnu ingen køretøjer. Konfigurer den først, og tilføj derefter Renault Picture."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "picture": {
+        "name": "Billede",
+        "state": {
+          "available": "Tilgængelig",
+          "no_picture": "Intet billede"
+        }
+      }
+    }
+  }
+}
