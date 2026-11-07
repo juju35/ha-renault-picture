@@ -116,8 +116,9 @@ class RenaultPictureSensor(SensorEntity):
     _attr_options: ClassVar[list[str]] = ["available", "no_picture"]
     # Also gives the translated entity name ("Espace Photo" in French).
     _attr_translation_key = "picture"
-    # URLs and the raw renditions dump are static diagnostics: keep them out of the recorder.
-    _unrecorded_attributes = frozenset({"available_renditions", "picture_large", "picture_small"})
+    # URLs and the raw renditions dump are static diagnostics, and the VIN identifies
+    # the vehicle: keep them out of the recorder (they stay in the live state).
+    _unrecorded_attributes = frozenset({"available_renditions", "picture_large", "picture_small", "vin"})
 
     def __init__(self, vin: str, proxy: Any, device: dr.DeviceEntry | None) -> None:
         """Initialise the sensor and attach it to the vehicle's Renault device."""
@@ -137,8 +138,9 @@ class RenaultPictureSensor(SensorEntity):
             # hence the minimum version in hacs.json.
             self.device_entry = device
         else:
-            # No device to be named after: untranslated fallback that keeps the VIN.
-            self._attr_name = f"{vin} Picture"
+            # No device to be named after: untranslated fallback that tells vehicles
+            # apart by the last 4 VIN characters only (the full VIN stays out of the UI).
+            self._attr_name = f"Renault {vin[-4:]} Picture"
 
     @property
     def native_value(self) -> str:

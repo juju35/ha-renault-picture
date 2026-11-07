@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 - 2026-11-07
+
+### Fixes
+- The `vin` attribute is no longer written to the recorder history; it stays available in the live state.
+- A sensor whose vehicle has no Renault device is now named "Renault <last 4 VIN characters> Picture" instead of showing the full VIN. Existing entity IDs are unchanged.
+
 ## 1.0.2 - 2026-11-04
 
 ### Documentation
