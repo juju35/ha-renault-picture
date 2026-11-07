@@ -75,7 +75,7 @@ One sensor per vehicle, attached to the existing Renault device:
 | attribute `picture_large` | large render URL |
 | attribute `picture_small` | thumbnail render URL |
 | attribute `available_renditions` | raw Kamereon assets, for troubleshooting |
-| attribute `vin` | the vehicle VIN |
+| attribute `vin` | the vehicle VIN (not recorded in the history) |
 
 ## Use with ha-renault-card
 

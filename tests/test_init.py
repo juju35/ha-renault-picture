@@ -79,6 +79,19 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
     assert len(state.attributes["available_renditions"]) == 3
 
 
+async def test_fallback_name_hides_vin(hass: HomeAssistant, fake_renault) -> None:
+    """Without a Renault device the name keeps only the last 4 VIN characters; the unique_id is unchanged."""
+    dev_reg = dr.async_get(hass)
+    dev_reg.async_remove_device(dev_reg.async_get_device(identifiers={(RENAULT_DOMAIN, VIN)}).id)
+    await _setup(hass)
+    entity_id = _picture_entity(hass)
+    state = hass.states.get(entity_id)
+    assert state.attributes["friendly_name"] == f"Renault {VIN[-4:]} Picture"
+    assert VIN not in state.attributes["friendly_name"]
+    assert VIN.lower() not in entity_id
+    assert state.attributes["vin"] == VIN
+
+
 @pytest.mark.parametrize(
     ("language", "name"),
     [
