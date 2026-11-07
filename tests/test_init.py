@@ -82,7 +82,9 @@ async def test_sensor_exposes_picture(hass: HomeAssistant, fake_renault) -> None
 async def test_fallback_name_hides_vin(hass: HomeAssistant, fake_renault) -> None:
     """Without a Renault device the name keeps only the last 4 VIN characters; the unique_id is unchanged."""
     dev_reg = dr.async_get(hass)
-    dev_reg.async_remove_device(dev_reg.async_get_device(identifiers={(RENAULT_DOMAIN, VIN)}).id)
+    # Walk the devices: async_get_device is deprecated in recent HA, its replacements missing in the minimum one.
+    for device in [d for d in dev_reg.devices.values() if (RENAULT_DOMAIN, VIN) in d.identifiers]:
+        dev_reg.async_remove_device(device.id)
     await _setup(hass)
     entity_id = _picture_entity(hass)
     state = hass.states.get(entity_id)
