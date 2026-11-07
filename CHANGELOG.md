@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 - 2026-11-07
+
+### Features
+- Added diagnostics: the VIN, account details, tokens and the query strings of picture URLs are redacted.
+
 ## 1.0.3 - 2026-11-07
 
 ### Fixes

@@ -22,6 +22,7 @@ publishes it, so it needs **no credentials** and makes **no network calls** of i
 - One `sensor.<vehicle>_picture` per vehicle, attached to the existing Renault device
 - The official picture URL as `entity_picture` (shown as the entity thumbnail) and in attributes
 - No credentials, no extra API calls: the data comes from the `renault` integration already running
+- Diagnostics with the VIN, account details, tokens and picture URL keys redacted
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, Portuguese (European and Brazilian), Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek
 
 ## Supported integrations
@@ -97,6 +98,8 @@ assets, the sensor reports `no_picture` instead of breaking, and
 `available_renditions` shows what the car actually exposes. While no `renault`
 entry is loaded with vehicles (startup, reauth, integration removed), the entry
 shows **Retrying setup** and Home Assistant retries it on its own.
+
+To report a problem, download the diagnostics from **Settings → Devices & services → Renault Picture → ⋮ → Download diagnostics** and attach them to the issue. The VIN, account details, tokens and the query strings of picture URLs are redacted; host and path stay readable.
 
 To debug:
 
