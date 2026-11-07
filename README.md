@@ -1,6 +1,6 @@
 # ha-renault-picture
 
-[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![Marketplace](https://img.shields.io/badge/Marketplace-Custom-41BDF5.svg)](https://www.home-assistant.io/integrations/marketplace/)
 [![HACS Validation](https://github.com/juju35/ha-renault-picture/actions/workflows/hacs.yml/badge.svg)](https://github.com/juju35/ha-renault-picture/actions/workflows/hacs.yml)
 [![Validate](https://github.com/juju35/ha-renault-picture/actions/workflows/validate.yml/badge.svg)](https://github.com/juju35/ha-renault-picture/actions/workflows/validate.yml)
 [![Lint](https://github.com/juju35/ha-renault-picture/actions/workflows/lint.yml/badge.svg)](https://github.com/juju35/ha-renault-picture/actions/workflows/lint.yml)
@@ -15,7 +15,7 @@ The picture URL already lives in the data the `renault` integration loads from
 Kamereon (each vehicle's `PICTURE` asset). This integration only reads it and
 publishes it, so it needs **no credentials** and makes **no network calls** of its own.
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-renault-picture&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Marketplace.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=juju35&repository=ha-renault-picture&category=integration)
 
 ## Features
 
@@ -39,19 +39,19 @@ The picture is shown by [Renault Card](https://github.com/juju35/ha-renault-card
 
 ## Installation
 
-### Via HACS (recommended)
+### Via the Marketplace (recommended)
 
 Click the button below to add the repository directly:
 
-[![Add to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-renault-picture&category=integration)
+[![Add to the Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=juju35&repository=ha-renault-picture&category=integration)
 
-Then click **Download** and restart Home Assistant.
+Then click **Install** and restart Home Assistant.
 
 Or manually:
 
-1. Open HACS → **⋮** (top right) → **Custom repositories**
+1. Open **Settings → Marketplace → Add from link** (top right; this needs a GitHub account connected)
 2. Add `https://github.com/juju35/ha-renault-picture` — Type: **Integration**
-3. Search for **Renault Picture** and click **Download**
+3. Open **Renault Picture** and click **Install**
 4. Restart Home Assistant
 
 ### Manual
