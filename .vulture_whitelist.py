@@ -10,3 +10,4 @@ _._attr_name  # unused attribute (custom_components/renault_picture/sensor.py:14
 _.native_value  # unused property (custom_components/renault_picture/sensor.py:143)
 _.entity_picture  # unused property (custom_components/renault_picture/sensor.py:148)
 _.extra_state_attributes  # unused property (custom_components/renault_picture/sensor.py:153)
+async_get_config_entry_diagnostics  # unused function (custom_components/renault_picture/diagnostics.py)
