@@ -275,3 +275,57 @@ async def test_no_reload_when_renault_entry_without_vehicles_removed(
     assert reloads == []
     assert entry.state is ConfigEntryState.LOADED
     assert _picture_entity(hass) is not None
+
+
+def _entity(hass: HomeAssistant, domain: str, vin: str = VIN) -> str | None:
+    return er.async_get(hass).async_get_entity_id(domain, DOMAIN, f"{vin}_picture")
+
+
+async def test_unavailable_while_renault_not_loaded(hass: HomeAssistant, fake_renault, monkeypatch) -> None:
+    """When the 'renault' entry leaves LOADED the entities go unavailable instead of keeping stale data."""
+    await _setup(hass)
+    reloads = _count_reloads(hass, monkeypatch)
+    entity_ids = [_entity(hass, "sensor"), _entity(hass, "image")]
+    fake_renault.state = ConfigEntryState.NOT_LOADED  # unloaded (disabled, or the first step of a reload)
+    async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.UPDATED, fake_renault)
+    await hass.async_block_till_done()
+    assert [hass.states.get(e).state for e in entity_ids] == ["unavailable", "unavailable"]
+    assert reloads == []
+    # Back with the same hub: available again, still no reload.
+    fake_renault.state = ConfigEntryState.LOADED
+    async_dispatcher_send(hass, SIGNAL_CONFIG_ENTRY_CHANGED, ConfigEntryChange.UPDATED, fake_renault)
+    await hass.async_block_till_done()
+    assert hass.states.get(entity_ids[0]).state == "available"
+    assert hass.states.get(entity_ids[1]).state != "unavailable"
+    assert reloads == []
+
+
+async def test_image_entity(hass: HomeAssistant, fake_renault, hass_client, respx_mock) -> None:
+    """An image entity per vehicle, on its Renault device, serves the large picture through Home Assistant."""
+    respx_mock.get("https://img.renault/large.png").respond(content=b"PNGDATA", content_type="image/png")
+    await _setup(hass)
+    entity_id = _entity(hass, "image")
+    assert entity_id is not None
+    state = hass.states.get(entity_id)
+    assert state.state not in ("unavailable", "unknown")
+    assert state.attributes["friendly_name"] == "Espace Picture"
+    assert state.attributes["entity_picture"].startswith(f"/api/image_proxy/{entity_id}?token=")
+    device = dr.async_get(hass).async_get(er.async_get(hass).async_get(entity_id).device_id)
+    assert (RENAULT_DOMAIN, VIN) in device.identifiers
+    # Served by Home Assistant (the frontend never loads the Renault URL itself), fetched once.
+    client = await hass_client()
+    for _ in range(2):
+        resp = await client.get(f"/api/image_proxy/{entity_id}")
+        assert resp.status == 200
+        assert await resp.read() == b"PNGDATA"
+        assert resp.content_type == "image/png"
+    assert respx_mock.calls.call_count == 1
+    # The sensor stays.
+    assert hass.states.get(_entity(hass, "sensor")).state == "available"
+
+
+async def test_image_unavailable_without_picture(hass: HomeAssistant, monkeypatch) -> None:
+    add_renault(hass, monkeypatch, [{"assetType": "VIDEO", "renditions": []}])
+    await _setup(hass)
+    assert hass.states.get(_entity(hass, "image")).state == "unavailable"
+    assert hass.states.get(_entity(hass, "sensor")).state == "no_picture"

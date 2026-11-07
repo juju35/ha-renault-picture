@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 - 2026-11-08
+
+### Features
+- Added an `image` entity per vehicle that serves the MyRenault picture through Home Assistant; the sensor stays.
+
+### Fixes
+- The entities now become unavailable while the Renault integration is not loaded, instead of keeping stale data.
+
 ## 1.1.0 - 2026-11-07
 
 ### Features

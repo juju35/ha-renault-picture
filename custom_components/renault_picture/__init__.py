@@ -3,7 +3,7 @@
 The picture URL already lives in the data the core ``renault`` integration
 loads from Kamereon (``vehicle.details.get_picture()``); this integration only
 reads it and publishes it, so it needs no credentials and no network calls of
-its own.
+its own (the image entity only downloads the picture file).
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from .const import RENAULT_DOMAIN
 from .sensor import renault_hubs
 
-PLATFORMS: list[Platform] = [Platform.SENSOR]
+PLATFORMS: list[Platform] = [Platform.IMAGE, Platform.SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
