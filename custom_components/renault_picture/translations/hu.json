@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "A jármű hivatalos MyRenault-képét érzékelőként teszi elérhetővé. Nincs szükség hitelesítő adatokra: a Renault-integráció által már betöltött adatokat használja fel újra."
+        "description": "A jármű hivatalos MyRenault-képét kép entitásként és érzékelőként teszi elérhetővé. Nincs szükség hitelesítő adatokra: a Renault-integráció által már betöltött adatokat használja fel újra."
       }
     },
     "abort": {

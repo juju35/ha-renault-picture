@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1 - 2026-11-08
+
+### Fixes
+- The setup description now mentions the image entity as well as the sensor, in every language.
+
 ## 1.2.0 - 2026-11-08
 
 ### Features

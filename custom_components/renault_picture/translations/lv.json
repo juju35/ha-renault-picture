@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Nodrošina oficiālo MyRenault transportlīdzekļa attēlu kā sensoru. Pieteikšanās dati nav nepieciešami: tiek atkārtoti izmantoti dati, ko Renault integrācija jau ir ielādējusi."
+        "description": "Nodrošina oficiālo MyRenault transportlīdzekļa attēlu kā attēla entītiju un sensoru. Pieteikšanās dati nav nepieciešami: tiek atkārtoti izmantoti dati, ko Renault integrācija jau ir ielādējusi."
       }
     },
     "abort": {

@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Udostępnia oficjalne zdjęcie pojazdu z MyRenault jako sensor. Dane logowania nie są potrzebne: wykorzystywane są dane już wczytane przez integrację Renault."
+        "description": "Udostępnia oficjalne zdjęcie pojazdu z MyRenault jako encję obrazu i sensor. Dane logowania nie są potrzebne: wykorzystywane są dane już wczytane przez integrację Renault."
       }
     },
     "abort": {

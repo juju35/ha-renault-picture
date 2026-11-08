@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Prikazuje zvaničnu MyRenault sliku vozila kao senzor. Nisu potrebni podaci za prijavu: ponovo se koriste podaci koje je integracija Renault već učitala."
+        "description": "Prikazuje zvaničnu MyRenault sliku vozila kao entitet slike i kao senzor. Nisu potrebni podaci za prijavu: ponovo se koriste podaci koje je integracija Renault već učitala."
       }
     },
     "abort": {

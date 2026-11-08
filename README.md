@@ -9,7 +9,7 @@
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/julienstep9)
 
 Home Assistant integration that exposes the **official MyRenault vehicle picture**
-as a sensor, for every car handled by the core [`renault`](https://www.home-assistant.io/integrations/renault/) integration.
+as an image entity and a sensor, for every car handled by the core [`renault`](https://www.home-assistant.io/integrations/renault/) integration.
 
 The picture URL already lives in the data the `renault` integration loads from
 Kamereon (each vehicle's `PICTURE` asset). This integration only reads it and

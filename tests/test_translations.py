@@ -92,3 +92,37 @@ def test_serbian_scripts_match() -> None:
     cyrillic, latin = _load("sr"), _load("sr-Latn")
     for key, text in cyrillic.items():
         assert "".join(_TO_LATIN.get(ch, ch) for ch in text) == latin[key], key
+
+
+# The word each language uses for the image entity in the config-flow description.
+_IMAGE_WORD = {
+    "en": "image entity",
+    "fr": "entité image",
+    "de": "Bild-Entität",
+    "es": "entidad de imagen",
+    "it": "entità immagine",
+    "nl": "afbeeldingsentiteit",
+    "pt": "entidade de imagem",
+    "pt-BR": "entidade de imagem",
+    "pl": "encję obrazu",
+    "ro": "entitate imagine",
+    "da": "billedentitet",
+    "sv": "bildentitet",
+    "bg": "обект изображение",
+    "ru": "объекта изображения",
+    "uk": "об'єкта зображення",
+    "hu": "kép entitásként",
+    "sk": "entitu obrázka",
+    "cs": "entitu obrázku",
+    "sl": "entiteto slike",
+    "lv": "attēla entītiju",
+    "el": "οντότητα εικόνας",
+    "sr": "ентитет слике",
+    "sr-Latn": "entitet slike",
+}
+
+
+@pytest.mark.parametrize("lang", sorted(p.stem for p in TRANSLATIONS.glob("*.json")))
+def test_config_flow_description_mentions_image_entity(lang: str) -> None:
+    """The setup description names the image entity, not only the sensor."""
+    assert _IMAGE_WORD[lang] in _load(lang)["config.step.user.description"]

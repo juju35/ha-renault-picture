@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Viser det officielle MyRenault-billede af køretøjet som en sensor. Ingen loginoplysninger nødvendige: de data, som Renault-integrationen allerede har indlæst, genbruges."
+        "description": "Viser det officielle MyRenault-billede af køretøjet som en billedentitet og en sensor. Ingen loginoplysninger nødvendige: de data, som Renault-integrationen allerede har indlæst, genbruges."
       }
     },
     "abort": {
