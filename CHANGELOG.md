@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 - 2026-11-08
+
+### Fixes
+- Integration icon redrawn in the shared ha-* style (rounded yellow tile, white car glyph, camera badge), with the SVG source and `logo.png` variants added.
+
 ## 1.2.1 - 2026-11-08
 
 ### Fixes
