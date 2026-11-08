@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Expose the official MyRenault vehicle picture as a sensor. No credentials needed: it reuses the data already loaded by the Renault integration."
+        "description": "Expose the official MyRenault vehicle picture as an image entity and a sensor. No credentials needed: it reuses the data already loaded by the Renault integration."
       }
     },
     "abort": {

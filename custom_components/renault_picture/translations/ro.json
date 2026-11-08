@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Expune ca senzor imaginea oficială MyRenault a vehiculului. Nu sunt necesare credențiale: reutilizează datele deja încărcate de integrarea Renault."
+        "description": "Expune imaginea oficială MyRenault a vehiculului ca entitate imagine și ca senzor. Nu sunt necesare credențiale: reutilizează datele deja încărcate de integrarea Renault."
       }
     },
     "abort": {

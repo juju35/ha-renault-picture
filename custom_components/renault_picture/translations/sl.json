@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Uradno sliko vozila iz MyRenault ponudi kot senzor. Poverilnice niso potrebne: ponovno uporabi podatke, ki jih je integracija Renault že naložila."
+        "description": "Uradno sliko vozila iz MyRenault ponudi kot entiteto slike in senzor. Poverilnice niso potrebne: ponovno uporabi podatke, ki jih je integracija Renault že naložila."
       }
     },
     "abort": {

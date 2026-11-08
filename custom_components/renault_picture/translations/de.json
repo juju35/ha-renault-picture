@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Stellt das offizielle MyRenault-Fahrzeugbild als Sensor bereit. Keine Zugangsdaten nötig: Es werden die bereits von der Renault-Integration geladenen Daten wiederverwendet."
+        "description": "Stellt das offizielle MyRenault-Fahrzeugbild als Bild-Entität und als Sensor bereit. Keine Zugangsdaten nötig: Es werden die bereits von der Renault-Integration geladenen Daten wiederverwendet."
       }
     },
     "abort": {

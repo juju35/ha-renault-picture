@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Expose la photo officielle MyRenault du véhicule sous forme de capteur. Aucun identifiant requis : les données déjà chargées par l'intégration Renault sont réutilisées."
+        "description": "Expose la photo officielle MyRenault du véhicule sous forme d'entité image et de capteur. Aucun identifiant requis : les données déjà chargées par l'intégration Renault sont réutilisées."
       }
     },
     "abort": {

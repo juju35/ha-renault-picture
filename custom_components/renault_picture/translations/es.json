@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Renault Picture",
-        "description": "Expone la imagen oficial MyRenault del vehículo como un sensor. No se necesitan credenciales: reutiliza los datos ya cargados por la integración Renault."
+        "description": "Expone la imagen oficial MyRenault del vehículo como una entidad de imagen y un sensor. No se necesitan credenciales: reutiliza los datos ya cargados por la integración Renault."
       }
     },
     "abort": {
