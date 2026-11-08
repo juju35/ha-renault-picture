@@ -11,6 +11,11 @@
     }
   },
   "entity": {
+    "image": {
+      "picture": {
+        "name": "Imagen"
+      }
+    },
     "sensor": {
       "picture": {
         "name": "Imagen",

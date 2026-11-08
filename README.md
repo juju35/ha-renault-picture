@@ -13,7 +13,7 @@ as a sensor, for every car handled by the core [`renault`](https://www.home-assi
 
 The picture URL already lives in the data the `renault` integration loads from
 Kamereon (each vehicle's `PICTURE` asset). This integration only reads it and
-publishes it, so it needs **no credentials** and makes **no network calls** of its own.
+publishes it, so it needs **no credentials** and makes **no API calls** of its own (only the image entity downloads the picture file itself).
 
 [![Open your Home Assistant instance and open a repository inside the Marketplace.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=juju35&repository=ha-renault-picture&category=integration)
 
@@ -21,6 +21,7 @@ publishes it, so it needs **no credentials** and makes **no network calls** of i
 
 - One `sensor.<vehicle>_picture` per vehicle, attached to the existing Renault device
 - The official picture URL as `entity_picture` (shown as the entity thumbnail) and in attributes
+- One `image.<vehicle>_picture` per vehicle that serves the picture through Home Assistant
 - No credentials, no extra API calls: the data comes from the `renault` integration already running
 - Diagnostics with the VIN, account details, tokens and picture URL keys redacted
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, Portuguese (European and Brazilian), Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek
@@ -65,9 +66,11 @@ Copy `custom_components/renault_picture/` to `/config/custom_components/renault_
 
 **Settings → Devices & services → Add integration → Renault Picture**. There is nothing to fill in; it finds the vehicles from the Renault integration.
 
-### Entity
+### Entities
 
-One sensor per vehicle, attached to the existing Renault device:
+Two entities per vehicle, attached to the existing Renault device. Both become unavailable while the Renault integration is not loaded (disabled, reloading), so they never show stale data.
+
+#### Sensor
 
 | | |
 |---|---|
@@ -77,6 +80,18 @@ One sensor per vehicle, attached to the existing Renault device:
 | attribute `picture_small` | thumbnail render URL |
 | attribute `available_renditions` | raw Kamereon assets, for troubleshooting |
 | attribute `vin` | the vehicle VIN (not recorded in the history) |
+
+#### Image
+
+`image.<vehicle>_picture` serves the large picture from Home Assistant (`/api/image_proxy/...`): Home Assistant downloads it once and the browser never loads the Renault URL itself. Use it in any card that takes an image entity:
+
+```yaml
+type: picture-entity
+entity: image.espace_picture
+show_state: false
+```
+
+It is unavailable when the vehicle exposes no picture.
 
 ## Use with ha-renault-card
 

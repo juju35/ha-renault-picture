@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterator
 from typing import Any, ClassVar
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
@@ -13,6 +14,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import RENAULT_DOMAIN
+from .entity import RenaultPictureEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -78,6 +80,19 @@ def _renditions(proxy: Any) -> list[dict[str, Any]]:
     ]
 
 
+def vehicles(hass: HomeAssistant) -> Iterator[tuple[ConfigEntry, Any, str, Any, dr.DeviceEntry | None]]:
+    """Yield (renault entry, hub, VIN, vehicle proxy, Renault device) for every loaded vehicle.
+
+    async_setup_entry (__init__.py) already waited for a loaded 'renault' entry;
+    if it went away since, the change listener reloads us.
+    """
+    dev_reg = dr.async_get(hass)
+    for renault_entry, hub in renault_hubs(hass):
+        devices = _vehicle_devices(dev_reg, renault_entry)
+        for vin, proxy in hub.vehicles.items():
+            yield renault_entry, hub, vin, proxy, devices.get(vin)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
@@ -90,40 +105,28 @@ async def async_setup_entry(
     for device in dr.async_entries_for_config_entry(dev_reg, entry.entry_id):
         dev_reg.async_update_device(device.id, remove_config_entry_id=entry.entry_id)
 
-    # async_setup_entry (__init__.py) already waited for a loaded 'renault' entry;
-    # if it went away since, the change listener reloads us.
-    hubs = renault_hubs(hass)
-
-    entities: list[RenaultPictureSensor] = []
-    for renault_entry, hub in hubs:
-        devices = _vehicle_devices(dev_reg, renault_entry)
-        entities.extend(RenaultPictureSensor(vin, proxy, devices.get(vin)) for vin, proxy in hub.vehicles.items())
-    _LOGGER.debug("Created %d picture sensor(s) from %d loaded 'renault' entry(ies)", len(entities), len(hubs))
+    entities = [RenaultPictureSensor(*vehicle) for vehicle in vehicles(hass)]
+    _LOGGER.debug("Created %d picture sensor(s)", len(entities))
     async_add_entities(entities)
 
 
-class RenaultPictureSensor(SensorEntity):
+class RenaultPictureSensor(RenaultPictureEntity, SensorEntity):
     """Publishes the official vehicle picture URL (state kept short)."""
 
-    _attr_has_entity_name = True
     _attr_icon = "mdi:car-side"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
-    # The assets never change for the lifetime of the hub (a 'renault' reload
-    # rebuilds the sensors), so everything is computed once and never polled.
-    _attr_should_poll = False
     # Distinguishable from HA's own "unavailable" state in automations, and translated.
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options: ClassVar[list[str]] = ["available", "no_picture"]
-    # Also gives the translated entity name ("Espace Photo" in French).
-    _attr_translation_key = "picture"
     # URLs and the raw renditions dump are static diagnostics, and the VIN identifies
     # the vehicle: keep them out of the recorder (they stay in the live state).
     _unrecorded_attributes = frozenset({"available_renditions", "picture_large", "picture_small", "vin"})
 
-    def __init__(self, vin: str, proxy: Any, device: dr.DeviceEntry | None) -> None:
-        """Initialise the sensor and attach it to the vehicle's Renault device."""
-        self._vin = vin
-        self._attr_unique_id = f"{vin}_picture"
+    def __init__(
+        self, renault_entry: ConfigEntry, hub: Any, vin: str, proxy: Any, device: dr.DeviceEntry | None
+    ) -> None:
+        """Read the pictures once and attach the sensor to the vehicle's Renault device."""
+        super().__init__(renault_entry, hub, vin, device)
         self._picture_large = _picture(proxy, _SIZE_LARGE)
         self._picture_small = _picture(proxy, _SIZE_SMALL)
         self._available_renditions = _renditions(proxy)
@@ -131,16 +134,6 @@ class RenaultPictureSensor(SensorEntity):
             _LOGGER.debug(
                 "Vehicle %s exposes no %s asset; renditions: %s", vin, _PICTURE_ASSET, self._available_renditions
             )
-        if device is not None:
-            # Same pattern as core helpers (switch_as_x, template): link to a device
-            # owned by another integration, so the sensor is "<vehicle> <translated name>".
-            # entity_platform only honors a pre-set device_entry since HA 2025.8,
-            # hence the minimum version in hacs.json.
-            self.device_entry = device
-        else:
-            # No device to be named after: untranslated fallback that tells vehicles
-            # apart by the last 4 VIN characters only (the full VIN stays out of the UI).
-            self._attr_name = f"Renault {vin[-4:]} Picture"
 
     @property
     def native_value(self) -> str:
