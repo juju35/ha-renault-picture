@@ -8,6 +8,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/juju35/ha-renault-picture/blob/main/LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/julienstep9)
 
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-renault-picture/main/custom_components/renault_picture/brand/icon.png" alt="Renault Picture" width="120"></p>
+
 Home Assistant integration that exposes the **official MyRenault vehicle picture**
 as an image entity and a sensor, for every car handled by the core [`renault`](https://www.home-assistant.io/integrations/renault/) integration.
 
