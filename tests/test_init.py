@@ -329,3 +329,37 @@ async def test_image_unavailable_without_picture(hass: HomeAssistant, monkeypatc
     await _setup(hass)
     assert hass.states.get(_entity(hass, "image")).state == "unavailable"
     assert hass.states.get(_entity(hass, "sensor")).state == "no_picture"
+
+
+async def test_malformed_assets_do_not_break_setup(hass: HomeAssistant, monkeypatch) -> None:
+    """Non-dict assets or renditions are skipped instead of raising during the platform setup."""
+    add_renault(
+        hass,
+        monkeypatch,
+        [
+            "garbage",
+            {"assetType": "PICTURE", "renditions": "not-a-list"},
+            {
+                "assetType": "PICTURE",
+                "renditions": [None, {"resolutionType": "ONE_MYRENAULT_LARGE", "url": "https://img.renault/l.png"}],
+            },
+        ],
+    )
+    await _setup(hass)
+    state = hass.states.get(_picture_entity(hass))
+    assert state.state == "available"
+    assert state.attributes["picture_large"] == "https://img.renault/l.png"
+    assert len(state.attributes["available_renditions"]) == 1
+
+
+async def test_no_picture_debug_log_hides_vin_and_urls(hass: HomeAssistant, monkeypatch, caplog) -> None:
+    """The debug line for a vehicle without picture carries neither the full VIN nor any URL."""
+    caplog.set_level("DEBUG", logger="custom_components.renault_picture")
+    add_renault(
+        hass, monkeypatch, [{"assetType": "VIDEO", "renditions": [{"resolutionType": "X", "url": "https://x/k?key=s"}]}]
+    )
+    await _setup(hass)
+    assert "exposes no PICTURE asset" in caplog.text
+    assert VIN not in caplog.text
+    assert "https://x/k" not in caplog.text
+    assert VIN[-4:] in caplog.text
