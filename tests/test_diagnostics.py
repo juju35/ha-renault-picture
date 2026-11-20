@@ -57,3 +57,14 @@ async def test_diagnostics_redacts_secrets(hass: HomeAssistant, hass_client, mon
         "https://img.renault/small.png",
         f"https://x/v.mp4?{REDACTED}",
     ]
+
+
+def test_redact_url_edge_cases() -> None:
+    """Non-strings pass through; unparsable or scheme-less URLs are fully redacted."""
+    from custom_components.renault_picture.diagnostics import _redact_url
+
+    assert _redact_url(None, VIN) is None
+    assert _redact_url("", VIN) == ""
+    assert _redact_url("http://[::1", VIN) == REDACTED
+    assert _redact_url(f"/relative/{VIN}.png", VIN) == REDACTED
+    assert _redact_url("https://img.renault/a.png", "") == "https://img.renault/a.png"
