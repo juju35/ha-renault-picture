@@ -9,6 +9,8 @@
 ### Maintenance
 - README: links to ha-vehicle-card (formerly ha-renault-card) and `custom:vehicle-card`, and shows the Renault brand logo.
 - Tests for the diagnostics URL redaction edge cases.
+- Tests: `pytest-homeassistant-custom-component` pinned in requirements_test.txt (reproducible CI), raised by Dependabot (pip).
+- README: the sensor's URLs and VIN are visible to every frontend user; the image entity keeps the Renault URL away from the browser.
 
 ## 1.2.2 - 2026-11-08
 

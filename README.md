@@ -87,6 +87,10 @@ Two entities per vehicle, attached to the existing Renault device. Both become u
 | attribute `available_renditions` | raw Kamereon assets, for troubleshooting |
 | attribute `vin` | the vehicle VIN (not recorded in the history) |
 
+The sensor's URLs (and the VIN) are part of its state, which every user of the frontend can read: they are kept for
+[ha-vehicle-card](#use-with-ha-vehicle-card), which reads `picture_large`. Where the Renault URL should not reach the
+browser, use the image entity below, served through Home Assistant's proxy.
+
 #### Image
 
 `image.<vehicle>_picture` serves the large picture from Home Assistant (`/api/image_proxy/...`): Home Assistant downloads it once and the browser never loads the Renault URL itself. Use it in any card that takes an image entity:
