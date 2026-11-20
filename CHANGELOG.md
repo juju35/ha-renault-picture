@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.3 - 2026-11-20
+
+### Fixes
+- A malformed Kamereon asset or rendition (not an object, renditions not a list) is skipped instead of breaking the setup.
+- The debug line logged for a vehicle without picture no longer contains the full VIN or the rendition URLs.
+
+### Maintenance
+- README: links to ha-vehicle-card (formerly ha-renault-card) and `custom:vehicle-card`, and shows the Renault brand logo.
+- Tests for the diagnostics URL redaction edge cases.
+- Tests: `pytest-homeassistant-custom-component` pinned in requirements_test.txt (reproducible CI), raised by Dependabot (pip).
+- README: the sensor's URLs and VIN are visible to every frontend user; the image entity keeps the Renault URL away from the browser.
+
 ## 1.2.2 - 2026-11-08
 
 ### Fixes

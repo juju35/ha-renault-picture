@@ -48,11 +48,19 @@ def _vehicle_devices(dev_reg: dr.DeviceRegistry, renault_entry: ConfigEntry) -> 
 
 
 def _assets(proxy: Any) -> list[dict[str, Any]]:
-    """Return the raw Kamereon assets of a vehicle, or an empty list."""
+    """Return the raw Kamereon assets of a vehicle (dicts only), or an empty list."""
     try:
-        return list(getattr(proxy.details, "assets", None) or [])
+        return [asset for asset in getattr(proxy.details, "assets", None) or [] if isinstance(asset, dict)]
     except Exception:  # noqa: BLE001 - details may be missing or partial
         return []
+
+
+def _asset_renditions(asset: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return the renditions of an asset (dicts only): a malformed payload must not break the setup."""
+    renditions = asset.get("renditions")
+    if not isinstance(renditions, list):
+        return []
+    return [rendition for rendition in renditions if isinstance(rendition, dict)]
 
 
 def _picture(proxy: Any, size: str) -> str | None:
@@ -61,7 +69,7 @@ def _picture(proxy: Any, size: str) -> str | None:
     for asset in _assets(proxy):
         if asset.get("assetType") != _PICTURE_ASSET:
             continue
-        for rendition in asset.get("renditions") or []:
+        for rendition in _asset_renditions(asset):
             if rendition.get("resolutionType") == want:
                 return rendition.get("url")
     return None
@@ -76,7 +84,7 @@ def _renditions(proxy: Any) -> list[dict[str, Any]]:
             "url": rendition.get("url"),
         }
         for asset in _assets(proxy)
-        for rendition in asset.get("renditions") or []
+        for rendition in _asset_renditions(asset)
     ]
 
 
@@ -131,8 +139,13 @@ class RenaultPictureSensor(RenaultPictureEntity, SensorEntity):
         self._picture_small = _picture(proxy, _SIZE_SMALL)
         self._available_renditions = _renditions(proxy)
         if self._picture_large is None:
+            # Logs are often pasted into issues: only the last VIN characters and the
+            # rendition types, never the URLs (their query string can carry keys).
             _LOGGER.debug(
-                "Vehicle %s exposes no %s asset; renditions: %s", vin, _PICTURE_ASSET, self._available_renditions
+                "Vehicle ...%s exposes no %s asset; renditions: %s",
+                vin[-4:],
+                _PICTURE_ASSET,
+                [(r["assetType"], r["resolutionType"]) for r in self._available_renditions],
             )
 
     @property
