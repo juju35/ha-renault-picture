@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.3 - 2026-11-20
+
+### Fixes
+- A malformed Kamereon asset or rendition (not an object, renditions not a list) is skipped instead of breaking the setup.
+- The debug line logged for a vehicle without picture no longer contains the full VIN or the rendition URLs.
+
+### Maintenance
+- README: links to ha-vehicle-card (formerly ha-renault-card) and `custom:vehicle-card`, and shows the Renault brand logo.
+- Tests for the diagnostics URL redaction edge cases.
+
 ## 1.2.2 - 2026-11-08
 
 ### Fixes
