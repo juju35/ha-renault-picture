@@ -10,6 +10,10 @@
 
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-renault-picture/main/custom_components/renault_picture/brand/icon.png" alt="Renault Picture" width="120"></p>
 
+<p align="center">
+  <a href="https://www.renault.com/"><img src="https://raw.githubusercontent.com/juju35/ha-renault-picture/main/images/renault.png" alt="Renault" width="48"></a>
+</p>
+
 Home Assistant integration that exposes the **official MyRenault vehicle picture**
 as an image entity and a sensor, for every car handled by the core [`renault`](https://www.home-assistant.io/integrations/renault/) integration.
 
@@ -34,7 +38,7 @@ publishes it, so it needs **no credentials** and makes **no API calls** of its o
 |---|---|
 | [Renault](https://www.home-assistant.io/integrations/renault/) (built in) | The vehicle details the integration already fetched (no extra API calls, no credentials), to expose the official MyRenault picture of each vehicle |
 
-The picture is shown by [Renault Card](https://github.com/juju35/ha-renault-card), see [Use with ha-renault-card](#use-with-ha-renault-card).
+The picture is shown by [Vehicle Card](https://github.com/juju35/ha-vehicle-card), see [Use with ha-vehicle-card](#use-with-ha-vehicle-card).
 
 ## Prerequisites
 
@@ -95,12 +99,12 @@ show_state: false
 
 It is unavailable when the vehicle exposes no picture.
 
-## Use with ha-renault-card
+## Use with ha-vehicle-card
 
-[ha-renault-card](https://github.com/juju35/ha-renault-card) picks the picture up automatically: it finds this integration's sensor on the vehicle's device and uses its `picture_large` URL. Leave the card's `image` option empty; set it only to override the MyRenault photo with a plain URL (the option does not render templates):
+[ha-vehicle-card](https://github.com/juju35/ha-vehicle-card) (formerly ha-renault-card) picks the picture up automatically: it finds this integration's sensor on the vehicle's device and uses its `picture_large` URL. Leave the card's `image` option empty; set it only to override the MyRenault photo with a plain URL (the option does not render templates):
 
 ```yaml
-type: custom:renault-card
+type: custom:vehicle-card
 image: /local/renault/clio.png
 ```
 
