@@ -32,6 +32,14 @@ publishes it, so it needs **no credentials** and makes **no API calls** of its o
 - Diagnostics with the VIN, account details, tokens and picture URL keys redacted
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, Portuguese (European and Brazilian), Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek
 
+## Screenshots
+
+The official MyRenault photo of the car, shown by [Vehicle Card](https://github.com/juju35/ha-vehicle-card) in its header and above the tiles.
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-renault-picture/main/screenshots/vehicle-card.png" alt="Renault Espace with its MyRenault photo in Vehicle Card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-renault-picture/main/screenshots/vehicle-card-dark.png" alt="Renault Espace with its MyRenault photo in Vehicle Card, dark theme" width="400"> |
+
 ## Supported integrations
 
 | Integration | What it reads |
