@@ -44,7 +44,7 @@ The official MyRenault photo of the car, shown by [Vehicle Card](https://github.
 
 | Integration | What it reads |
 |---|---|
-| [Renault](https://www.home-assistant.io/integrations/renault/) (built in) | The vehicle details the integration already fetched (no extra API calls, no credentials), to expose the official MyRenault picture of each vehicle |
+| <img src="https://raw.githubusercontent.com/juju35/ha-renault-picture/main/images/renault.png" alt="" width="16"> [Renault](https://www.home-assistant.io/integrations/renault/) (built in) | The vehicle details the integration already fetched (no extra API calls, no credentials), to expose the official MyRenault picture of each vehicle |
 
 The picture is shown by [Vehicle Card](https://github.com/juju35/ha-vehicle-card), see [Use with ha-vehicle-card](#use-with-ha-vehicle-card).
 
