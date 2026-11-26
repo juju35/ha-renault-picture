@@ -4,6 +4,7 @@
   "after_dependencies": [
     "renault"
   ],
+  "categories": ["vehicles_transport.cars_evs"],
   "codeowners": [
     "@juju35"
   ],
