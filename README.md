@@ -38,7 +38,7 @@ The official MyRenault photo of the car, shown by [Vehicle Card](https://github.
 
 | Light | Dark |
 |---|---|
-| <img src="https://raw.githubusercontent.com/juju35/ha-renault-picture/main/screenshots/vehicle-card.png" alt="Renault Espace with its MyRenault photo in Vehicle Card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-renault-picture/main/screenshots/vehicle-card-dark.png" alt="Renault Espace with its MyRenault photo in Vehicle Card, dark theme" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vehicle-card/main/screenshots/espace.png" alt="Renault Espace with its MyRenault photo in Vehicle Card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-vehicle-card/main/screenshots/espace-dark.png" alt="Renault Espace with its MyRenault photo in Vehicle Card, dark theme" width="400"> |
 
 ## Supported integrations
 
